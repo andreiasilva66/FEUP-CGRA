@@ -1,10 +1,10 @@
 # CG 2023/2024
 
-## Group T0xG0y
+## Group T02G013
 | Name             | Number    | E-Mail             |
 | ---------------- | --------- | ------------------ |
-| John Doe         | 201901010 | ...                |
-| Jane Doe         | 201901011 | ...                |
+| Andreia Silva         | 202108769 | up202108769@up.pt                |
+| Gonçalo Miranda         | 202108773 | up202108773@up.pt |
 
 ----
 
