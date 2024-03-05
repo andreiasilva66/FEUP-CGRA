@@ -38,6 +38,7 @@ export class MyScene extends CGFscene {
 
         //Other variables connected to MyInterface
         this.selectedObject = 0;
+        this.globalLight = 0;
         this.selectedMaterial = 0;
         this.displayAxis = true;
         this.displayNormals = false;
@@ -166,6 +167,7 @@ export class MyScene extends CGFscene {
 
         this.pushMatrix();
         this.scale(this.scaleFactor,this.scaleFactor,this.scaleFactor);
+        this.setGlobalAmbientLight(this.globalLight, this.globalLight, this.globalLight, 1.0); 
         
         if (this.displayNormals)
             this.objects[this.selectedObject].enableNormalViz();
