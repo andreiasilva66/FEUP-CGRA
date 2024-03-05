@@ -17,6 +17,28 @@ export class MyTangram extends CGFobject {
         this.paralellogram = new MyParalellogram(this.scene);
     }
 
+//    @Override
+    enableNormalViz(){
+        this.diamond.enableNormalViz();
+        this.triangleBlue.enableNormalViz();
+        this.triangleOrange.enableNormalViz();
+        this.trianglePink.enableNormalViz();
+        this.triangleRed.enableNormalViz();
+        this.trianglePurple.enableNormalViz();
+        this.paralellogram.enableNormalViz();
+    }
+
+//     @Override
+    disableNormalViz(){
+        this.diamond.disableNormalViz();
+        this.triangleBlue.disableNormalViz();
+        this.triangleOrange.disableNormalViz();
+        this.trianglePink.disableNormalViz();
+        this.triangleRed.disableNormalViz();
+        this.trianglePurple.disableNormalViz();
+        this.paralellogram.disableNormalViz();
+    }
+
     display(){
 
         this.scene.pushMatrix();
