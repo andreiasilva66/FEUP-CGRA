@@ -1,9 +1,9 @@
 import {CGFobject} from '../lib/CGF.js';
-import { MyDiamond  } from './MyDiamond.js';
-import { MyTriangle } from './MyTriangle.js';
-import { MyParalellogram } from './MyParalellogram.js';
-import { MyTriangleBig } from './MyTriangleBig.js'; 
-import { MyTriangleSmall } from './MyTriangleSmall.js';
+import { MyDiamond  } from './old/MyDiamond.js';
+import { MyTriangle } from './old/MyTriangle.js';
+import { MyParalellogram } from './old/MyParalellogram.js';
+import { MyTriangleBig } from './old/MyTriangleBig.js'; 
+import { MyTriangleSmall } from './old/MyTriangleSmall.js';
 
 export class MyTangram extends CGFobject {
     constructor(scene) {
