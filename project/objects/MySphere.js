@@ -28,7 +28,7 @@ export class MySphere extends CGFobject {
                 const y = cosTheta;
                 const z = sinPhi * sinTheta;
                 const u = 1 - (slice / this.slices);
-                const v = 1 - (stack / this.stacks);
+                const v =  stack / this.stacks;
 
                 this.vertices.push(x, y, z);
                 this.normals.push(x, y, z);
