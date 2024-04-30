@@ -1,5 +1,6 @@
 import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFshader, CGFtexture } from "../lib/CGF.js";
 import { MyPlane } from "./objects/MyPlane.js";
+import { MyRock } from "./objects/MyRock.js";
 import { MySphere } from "./objects/MySphere.js";
 import { MyGarden } from "./objects/MyGarden.js";
 
@@ -13,7 +14,7 @@ export class MyScene extends CGFscene {
   }
   init(application) {
     super.init(application);
-    
+
     this.initCameras();
     this.initLights();
 
@@ -27,9 +28,10 @@ export class MyScene extends CGFscene {
 
     //Initialize scene objects
     this.axis = new CGFaxis(this);
-    this.plane = new MyPlane(this,30);
+    this.plane = new MyPlane(this, 30);
     this.sphere = new MySphere(this, 20, 20);
     this.garden = new MyGarden(this, 3, 3);
+    this.rock = new MyRock(this, 10, 10, 1);
 
     //Objects connected to MyInterface
     this.displayAxis = true;
@@ -41,12 +43,16 @@ export class MyScene extends CGFscene {
     this.appearance = new CGFappearance(this);
     this.appearance.setTexture(this.texture);
     this.appearance.setTextureWrap('REPEAT', 'REPEAT');
-    
+
     this.sphereMaterial = new CGFappearance(this);
     this.sphereMaterial.loadTexture("images/earth.jpg");
     this.sphereMaterial.setTextureWrap('REPEAT', 'REPEAT');
+
+    this.rockMaterial = new CGFappearance(this);
+    this.rockMaterial.loadTexture("images/rock_texture.png");
+    this.rockMaterial.setTextureWrap('REPEAT', 'REPEAT');
   }
-  
+
   initLights() {
     this.lights[0].setPosition(15, 0, 5, 1);
     this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
@@ -72,7 +78,7 @@ export class MyScene extends CGFscene {
 
   updateAppliedSphereTexture() {
     this.sphere.setTexture(this.textures[this.selectedTexture]);
-}
+  }
 
   display() {
     // ---- BEGIN Background, camera and axis setup
@@ -92,15 +98,21 @@ export class MyScene extends CGFscene {
 
     this.pushMatrix();
     this.appearance.apply();
-    this.translate(0,-100,0);
-    this.scale(400,400,400);
-    this.rotate(-Math.PI/2.0,1,0,0);
+    this.translate(0, -500, 0);
+    this.scale(400, 400, 400);
+    this.rotate(-Math.PI / 2.0, 1, 0, 0);
     this.plane.display();
     this.popMatrix();
 
     this.setDefaultAppearance();
     this.pushMatrix();
     this.garden.display();
+    this.popMatrix();
+
+    this.pushMatrix();
+    this.scale(.2, .1, .2);
+    this.rockMaterial.apply();
+    //this.rock.display();
     this.popMatrix();
     // ---- END Primitive drawing section
   }
