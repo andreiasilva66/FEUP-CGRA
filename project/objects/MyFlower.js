@@ -1,4 +1,4 @@
-import { CGFobject, CGFappearance } from "../../lib/CGF.js";
+import { CGFobject, CGFappearance, CGFtexture } from "../../lib/CGF.js";
 import { MyPetal } from "./MyPetal.js";
 import { MyStem } from "./MyStem.js";
 import { MyReceptacle } from "./MyReceptacle.js";
@@ -30,30 +30,51 @@ export class MyFlower extends CGFobject {
         this.receptacle = new MyReceptacle(this.scene);
         this.unionAngles = Array.from({ length: this.nPetals }, () => Math.random() * (this.maxUnAngle - this.minUnAngle) + this.minUnAngle);
         this.stemIncl = Array.from({ length: this.stemSize }, () => Math.random() * Math.PI/9 - Math.PI/18);
-        this.stemLength = Array.from({ length: this.stemSize }, () => Math.random() * 2 + 3);
+        this.stemLength = Array.from({ length: this.stemSize }, () => Math.random() * 3 + 2);
         this.leaf = new MyLeaf(this.scene, this.stemColor, this.leavesColor);
     }
 
     initMaterials() {
+        // Select random texture for petal
+        let petalText = Math.floor(Math.random() * 3);
+        switch(petalText){
+            case 0:
+                this.petalTexture = new CGFtexture(this.scene, 'images/petalText1.jpg');
+                break;
+            case 1:
+                this.petalTexture = new CGFtexture(this.scene, 'images/petalText2.avif');
+                break;
+            case 2:
+                this.petalTexture = new CGFtexture(this.scene, 'images/petalText3.jpg');
+                break;
+        }
         this.petalMaterial = new CGFappearance(this.scene);
         this.petalMaterial.setAmbient(this.petalColor[0], this.petalColor[1], this.petalColor[2], this.petalColor[3]);
         this.petalMaterial.setDiffuse(this.petalColor[0], this.petalColor[1], this.petalColor[2], this.petalColor[3]);
         this.petalMaterial.setSpecular(this.petalColor[0], this.petalColor[1], this.petalColor[2], this.petalColor[3]);
         this.petalMaterial.setShininess(10);
+        this.petalMaterial.setTexture(this.petalTexture);
+        this.petalMaterial.setTextureWrap('CLAMP_TO_EDGE', 'CLAMP_TO_EDGE');
     
         // Initialize heart material
+        this.heartTexture = new CGFtexture(this.scene, 'images/receptacle2.jpg');
         this.heartMaterial = new CGFappearance(this.scene);
         this.heartMaterial.setAmbient(this.heartColor[0], this.heartColor[1], this.heartColor[2], this.heartColor[3]);
         this.heartMaterial.setDiffuse(this.heartColor[0], this.heartColor[1], this.heartColor[2], this.heartColor[3]);
         this.heartMaterial.setSpecular(this.heartColor[0], this.heartColor[1], this.heartColor[2], this.heartColor[3]);
         this.heartMaterial.setShininess(10);
+        this.heartMaterial.setTexture(this.heartTexture);
+        this.heartMaterial.setTextureWrap('REPEAT', 'REPEAT');
     
         // Initialize stem material
+        this.stemTexture = new CGFtexture(this.scene, 'images/receptacle.jpg');
         this.stemMaterial = new CGFappearance(this.scene);
         this.stemMaterial.setAmbient(this.stemColor[0], this.stemColor[1], this.stemColor[2], this.stemColor[3]);
         this.stemMaterial.setDiffuse(this.stemColor[0], this.stemColor[1], this.stemColor[2], this.stemColor[3]);
         this.stemMaterial.setSpecular(this.stemColor[0], this.stemColor[1], this.stemColor[2], this.stemColor[3]);
         this.stemMaterial.setShininess(10);
+        this.stemMaterial.setTexture(this.stemTexture);
+        this.stemMaterial.setTextureWrap('REPEAT', 'REPEAT');
     
         // Initialize leaves material
         this.leavesMaterial = new CGFappearance(this.scene);
@@ -64,38 +85,20 @@ export class MyFlower extends CGFobject {
     }
 
     display() {
-        // Display the petals
-        let angle = Math.PI / this.nPetals;
-        let petalSize = this.extRadius - this.heartRadius;
-        for (let i = 0; i < this.nPetals; i++) { 
-            this.scene.pushMatrix();
-            
-            this.scene.rotate(angle, 0, 0, 1);
-            this.scene.translate(0, this.heartRadius + petalSize/2, 0);
-            this.scene.scale(petalSize, petalSize, petalSize);
-            this.scene.rotate(this.unionAngles[i], 0, 1, 0);
-            this.petalMaterial.apply();
-            this.petal.display();
-            this.scene.popMatrix();
-            angle += 2 * Math.PI / this.nPetals; 
-        }
-        
-        // Display the heart (receptacle)
-        this.scene.pushMatrix();
-        this.scene.translate(0, 0, 0);
-        this.scene.scale(this.heartRadius, this.heartRadius, this.heartRadius);
-        this.heartMaterial.apply();
-        this.receptacle.display();
-        this.scene.popMatrix();
     
+        var stemTotalLength = 0;
+        for(let i=0; i<this.stemSize; i++){
+            stemTotalLength += this.stemLength[i];
+        }
+
         // Display the stem
-        let stemHeight = this.heartRadius;
+        let stemHeight = 0;
         let x_offset = 0;
         let z_offset = 0;
         for(let i=0; i<this.stemSize; i++){
 
             this.scene.pushMatrix();
-            this.scene.translate(x_offset, -stemHeight, z_offset);
+            this.scene.translate(x_offset, -stemHeight+stemTotalLength, z_offset);
             this.scene.rotate(this.stemIncl[i], 0, 0, 1);
             this.scene.rotate(this.stemIncl[i], 1, 0, 0);
             this.scene.scale(this.stemRadius, this.stemLength[i], this.stemRadius);
@@ -108,14 +111,40 @@ export class MyFlower extends CGFobject {
             
             if(i != this.stemSize-1){
                 this.scene.pushMatrix();
-                this.scene.translate(x_offset, -stemHeight, z_offset);
+                this.scene.translate(x_offset, -stemHeight + stemTotalLength, z_offset);
                 this.scene.rotate(-Math.PI/2, 0, 0, 1);
+                this.scene.scale(2, 2, 2);
                 this.leaf.display();
                 this.scene.popMatrix();
             }
             
         }
 
+        // Display the petals
+        let angle = Math.PI / this.nPetals;
+        let petalSize = this.extRadius - this.heartRadius;
+        for (let i = 0; i < this.nPetals; i++) { 
+            this.scene.pushMatrix();
+            this.scene.translate(0, stemTotalLength + this.heartRadius, 0);
+            this.scene.rotate(angle, 0, 0, 1);
+            this.scene.translate(0, this.heartRadius + petalSize/2, 0);
+            this.scene.scale(petalSize, petalSize, petalSize);
+            this.scene.rotate(this.unionAngles[i], 0, 1, 0);
+            this.petalMaterial.apply();
+            this.petal.display();
+            this.scene.popMatrix();
+            angle += 2 * Math.PI / this.nPetals; 
+        }
+        
+        // Display the heart (receptacle)
+        this.scene.pushMatrix();
+        this.scene.translate(0, stemTotalLength + this.heartRadius, 0);
+        this.scene.scale(this.heartRadius, this.heartRadius, this.heartRadius);
+        this.heartMaterial.apply();
+        this.receptacle.display();
+        this.scene.popMatrix();
+
+        
 
     }
 }

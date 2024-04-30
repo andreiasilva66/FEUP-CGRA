@@ -9,7 +9,6 @@ export class MyStem extends CGFobject {
 
     display(){
         this.scene.pushMatrix();
-        //this.scene.scale(0.1, 3, 0.1);
         this.scene.rotate(Math.PI/2, 1, 0, 0);
         this.cylinder.display();
         this.scene.popMatrix();

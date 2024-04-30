@@ -1,4 +1,4 @@
-import {CGFobject, CGFappearance} from '../../lib/CGF.js';
+import {CGFobject, CGFappearance, CGFtexture} from '../../lib/CGF.js';
 import { MyTriangle } from '../geometric/MyTriangle.js';
 import { MyCylinder } from '../geometric/MyCylinder.js';
 
@@ -14,18 +14,24 @@ export class MyLeaf extends CGFobject {
 
     initMaterials() {
         // Initialize stem material
+        this.stemTexture = new CGFtexture(this.scene, 'images/stem.jpg');
         this.stemMaterial = new CGFappearance(this.scene);
         this.stemMaterial.setAmbient(this.stemColor[0], this.stemColor[1], this.stemColor[2], this.stemColor[3]);
         this.stemMaterial.setDiffuse(this.stemColor[0], this.stemColor[1], this.stemColor[2], this.stemColor[3]);
         this.stemMaterial.setSpecular(this.stemColor[0], this.stemColor[1], this.stemColor[2], this.stemColor[3]);
         this.stemMaterial.setShininess(10);
+        this.stemMaterial.setTexture(this.stemTexture);
+        this.stemMaterial.setTextureWrap('REPEAT', 'REPEAT');
     
         // Initialize leaves material
+        this.leafTexture = new CGFtexture(this.scene, 'images/leafText.jpg');
         this.leavesMaterial = new CGFappearance(this.scene);
         this.leavesMaterial.setAmbient(this.leavesColor[0], this.leavesColor[1], this.leavesColor[2], this.leavesColor[3]);
         this.leavesMaterial.setDiffuse(this.leavesColor[0], this.leavesColor[1], this.leavesColor[2], this.leavesColor[3]);
         this.leavesMaterial.setSpecular(this.leavesColor[0], this.leavesColor[1], this.leavesColor[2], this.leavesColor[3]);
         this.leavesMaterial.setShininess(10);
+        this.leavesMaterial.setTexture(this.leafTexture);
+        this.leavesMaterial.setTextureWrap('REPEAT', 'REPEAT');
     }
 
     display(){

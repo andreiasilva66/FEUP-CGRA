@@ -1,13 +1,7 @@
 import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFshader, CGFtexture } from "../lib/CGF.js";
 import { MyPlane } from "./objects/MyPlane.js";
 import { MySphere } from "./objects/MySphere.js";
-// import { MyPetal } from "./objects/MyPetal.js";
-// import { MyReceptacle } from "./objects/MyReceptacle.js";
-// import { MyStem } from "./objects/MyStem.js";
-// import { MyCylinder } from "./geometric/MyCylinder.js";
-import { MyFlower } from "./objects/MyFlower.js";
-import { MyLeaf } from "./objects/MyLeaf.js";
-
+import { MyGarden } from "./objects/MyGarden.js";
 
 /**
  * MyScene
@@ -35,12 +29,7 @@ export class MyScene extends CGFscene {
     this.axis = new CGFaxis(this);
     this.plane = new MyPlane(this,30);
     this.sphere = new MySphere(this, 20, 20);
-    // this.petal = new MyPetal(this, Math.PI/6);
-    // this.receptacle = new MyReceptacle(this);
-    // this.stem = new MyStem(this);
-    //this.cylinder = new MyCylinder(this, 20, 20);
-    this.flower = new MyFlower(this, 3, 8, [0.5, 0.1, 0.1, 1], 1, [0.5, 0.5, 0.1, 1], 0.1, 3, [0.1, 0.5, 0.1, 1], [0.1, 0.7, 0.1, 0.8], -Math.PI/3, Math.PI/3);
-    //this.leaf = new MyLeaf(this);
+    this.garden = new MyGarden(this, 3, 3);
 
     //Objects connected to MyInterface
     this.displayAxis = true;
@@ -108,21 +97,10 @@ export class MyScene extends CGFscene {
     this.rotate(-Math.PI/2.0,1,0,0);
     this.plane.display();
     this.popMatrix();
-    
-    // this.pushMatrix();
-    // this.sphereMaterial.apply();
-    // this.sphere.display();
-    // this.popMatrix();
-
-    // this.setDefaultAppearance();
-    // this.pushMatrix();
-    // this.petal.display();
-    // this.popMatrix();
 
     this.setDefaultAppearance();
     this.pushMatrix();
-    this.flower.display();
-    //this.sphere.display();
+    this.garden.display();
     this.popMatrix();
     // ---- END Primitive drawing section
   }
