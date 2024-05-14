@@ -45,6 +45,7 @@ export class MyScene extends CGFscene {
     //Objects connected to MyInterface
     this.displayAxis = true;
     this.scaleFactor = 1;
+    this.speedFactor = 0.1;
 
     this.enableTextures(true);
 
@@ -113,6 +114,7 @@ export class MyScene extends CGFscene {
     this.setDefaultAppearance();
     if (this.displayAxis) this.axis.display();
 
+
     // ---- BEGIN Primitive drawing section
 
     this.pushMatrix();
@@ -134,6 +136,7 @@ export class MyScene extends CGFscene {
     this.popMatrix();
 
     this.pushMatrix();
+    this.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
     this.movingBee.display();
     this.popMatrix();
      
@@ -142,7 +145,52 @@ export class MyScene extends CGFscene {
     this.rockSetMaterial.apply();
     //this.rockSet.display();
     this.popMatrix();
+
+    this.checkKeys();
   
     // ---- END Primitive drawing section
   }
+
+  checkKeys() {
+    var text="Keys pressed: ";
+    var keysPressed=false;
+
+    // Check for key codes e.g. in https://keycode.info/
+    if (this.gui.isKeyPressed("KeyW")) {
+      text+=" W ";
+      this.movingBee.accelerate(0.05* this.speedFactor);
+      keysPressed=true;
+    }
+
+    if (this.gui.isKeyPressed("KeyS"))        {
+      text+=" S ";
+      this.movingBee.accelerate(-0.05 * this.speedFactor);
+      keysPressed=true;
+    }
+
+    if (this.gui.isKeyPressed("KeyA")) {
+      text+=" A ";
+      this.movingBee.turn(0.1 * this.speedFactor);
+      keysPressed=true;
+    }
+
+    if (this.gui.isKeyPressed("KeyD")) {
+      text+=" D ";
+      this.movingBee.turn(-0.1 * this.speedFactor);
+      keysPressed=true;
+    }
+
+    if(this.gui.isKeyPressed("KeyR")){
+      text+=" R ";
+      this.movingBee.pos = [0, 3, 0];
+      this.movingBee.goingUp = true;
+      this.movingBee.orientation = 0;
+      this.movingBee.velocity = 0;
+      keysPressed=true;
+    }
+
+    if (keysPressed)
+      console.log(text);
+  }
+
 }
