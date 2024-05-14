@@ -4,7 +4,7 @@ import { MyPlane } from "./objects/MyPlane.js";
 import { MyRock } from "./objects/MyRock.js";
 import { MyRockSet } from "./objects/MyRockSet.js";
 import { MySphere } from "./objects/MySphere.js";
-
+import { MyGarden } from "./objects/MyGarden.js";
 
 /**
  * MyScene
@@ -35,10 +35,10 @@ export class MyScene extends CGFscene {
     this.plane = new MyPlane(this, 30);
     this.sphere = new MySphere(this, 20, 20, 20);
     this.rock = new MyRock(this, 10, 10);
+    this.garden = new MyGarden(this, 3, 3);
     this.rockSet = new MyRockSet(this,20,10,10);
     this.panorama = new MyPanorama(this, "images/panorama.jpg");
     
-
     //Objects connected to MyInterface
     this.displayAxis = true;
     this.scaleFactor = 1;
@@ -119,28 +119,27 @@ export class MyScene extends CGFscene {
     this.plane.display();
     this.popMatrix();
 
+
     this.pushMatrix();
     this.panorama.display();
     this.popMatrix();
 
+    this.setDefaultAppearance();
+    this.pushMatrix();
+    this.garden.display();
+    this.popMatrix();
 
     // this.pushMatrix();
     // this.sphereMaterial.apply();
     // this.sphere.display();
     // this.popMatrix();
-    
-    //this.pushMatrix(); 
-    //this.scale(.2, .1, .2);
-    //this.rockMaterial.apply();
-    //this.rock.display();
-    //this.popMatrix();
      
-    /*this.pushMatrix();
+    this.pushMatrix();
     this.scale(.2, .1, .2);
     this.rockSetMaterial.apply();
     this.rockSet.display();
     this.popMatrix();
-*/
+  
     // ---- END Primitive drawing section
   }
 }
