@@ -30,7 +30,7 @@ export class MyFlower extends CGFobject {
         this.receptacle = new MyReceptacle(this.scene);
         this.unionAngles = Array.from({ length: this.nPetals }, () => Math.random() * (this.maxUnAngle - this.minUnAngle) + this.minUnAngle);
         this.stemIncl = Array.from({ length: this.stemSize }, () => Math.random() * Math.PI/9 - Math.PI/18);
-        this.stemLength = Array.from({ length: this.stemSize }, () => Math.random() * 3 + 2);
+        this.stemLength = Array.from({ length: this.stemSize }, () => Math.random() * 1.5 + 1.5 );
         this.leaf = new MyLeaf(this.scene, this.stemColor, this.leavesColor);
     }
 

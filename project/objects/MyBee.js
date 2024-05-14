@@ -2,6 +2,7 @@ import { CGFobject, CGFappearance } from "../../lib/CGF.js";
 import { MySphere } from "./MySphere.js";
 import { MyHead } from "./MyHead.js";
 import { MyLeg } from "./MyLeg.js"
+import { MyWing } from "./MyWing.js";
 
 export class MyBee extends CGFobject {
     constructor(scene) {
@@ -9,11 +10,12 @@ export class MyBee extends CGFobject {
         this.sphere = new MySphere(this.scene, 20, 20);
         this.head = new MyHead(this.scene);
         this.leg = new MyLeg(this.scene);
+        this.wing = new MyWing(this.scene);
         this.initMaterials();
     }
 
     initMaterials(){
-        
+
         // Fur Material
         this.furMaterial = new CGFappearance(this.scene);
         this.furMaterial.setAmbient(0.1, 0.1, 0.1, 1);
@@ -39,23 +41,10 @@ export class MyBee extends CGFobject {
         this.legMaterial.setSpecular(0.1, 0.1, 0.1, 1);
         this.legMaterial.setShininess(10.0);
 
-        // Wing Material (Transparent)
-        this.wingMaterial = new CGFappearance(this.scene);
-        this.wingMaterial.setAmbient(0.1, 0.1, 0.1, 0.1); // Adjust the color and alpha as needed
-        this.wingMaterial.setDiffuse(0.1, 0.1, 0.1, 0.1); // Adjust the color and alpha as needed
-        this.wingMaterial.setSpecular(0.1, 0.1, 0.1, 0.5);
-        this.wingMaterial.setShininess(0.0);
-        this.wingMaterial.setEmission(0.1, 0.1, 0.1, 0.1);
-        this.wingMaterial.loadTexture('images/wingText.webp');
-        this.wingMaterial.setTextureWrap('REPEAT', 'REPEAT');
-
-        // Enable alpha blending
-        this.scene.gl.enable(this.scene.gl.BLEND);
-        this.scene.gl.blendFunc(this.scene.gl.SRC_ALPHA, this.scene.gl.ONE_MINUS_SRC_ALPHA);
-
     }
 
     display(){
+
 
         // Head
         this.scene.pushMatrix();
@@ -105,38 +94,30 @@ export class MyBee extends CGFobject {
 
         // First Right Wing
         this.scene.pushMatrix();
-        this.scene.translate(0.5, 0.7, -0.8);
-        //this.scene.rotate(-Math.PI/2, 1, 0, 0);
-        this.scene.scale(0.4, 0.01, 0.2);
-        this.wingMaterial.apply();
-        this.sphere.display();
+        this.scene.translate(0.2, 0.7, -0.8);
+        this.wing.display();
         this.scene.popMatrix();
 
         // Second Right Wing
         this.scene.pushMatrix();
-        this.scene.translate(0.4, 0.7, -1.05);
-        //this.scene.rotate(-Math.PI/2, 1, 0, 0);
-        this.scene.scale(0.25, 0.01, 0.1);
-        this.wingMaterial.apply();
-        this.sphere.display();
+        this.scene.translate(0.2, 0.7, -1.05);
+        this.scene.scale(0.8, 0.8, 0.8);
+        this.wing.display();
         this.scene.popMatrix();
 
-        // Fisrt Left Wing
+        // First Left Wing
         this.scene.pushMatrix();
-        this.scene.translate(-0.5, 0.7, -0.8);
-        //this.scene.rotate(-Math.PI/2, 1, 0, 0);
-        this.scene.scale(0.4, 0.01, 0.2);
-        this.wingMaterial.apply();
-        this.sphere.display();
+        this.scene.rotate(Math.PI, 0, 1, 0);
+        this.scene.translate(0.2, 0.7, 0.8);
+        this.wing.display();
         this.scene.popMatrix();
 
         // Second Left Wing
         this.scene.pushMatrix();
-        this.scene.translate(-0.4, 0.7, -1.05);
-        //this.scene.rotate(-Math.PI/2, 1, 0, 0);
-        this.scene.scale(0.25, 0.01, 0.1);
-        this.wingMaterial.apply();
-        this.sphere.display();
+        this.scene.rotate(Math.PI, 0, 1, 0);
+        this.scene.translate(0.2, 0.7, 1.05);
+        this.scene.scale(0.8, 0.8, 0.8);
+        this.wing.display();
         this.scene.popMatrix();
     }
 

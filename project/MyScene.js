@@ -5,9 +5,7 @@ import { MyRock } from "./objects/MyRock.js";
 import { MyRockSet } from "./objects/MyRockSet.js";
 import { MySphere } from "./objects/MySphere.js";
 import { MyGarden } from "./objects/MyGarden.js";
-import { MyLeg } from "./objects/MyLeg.js";
-import { MyHead } from "./objects/MyHead.js";
-import { MyBee } from "./objects/MyBee.js";
+import { MyMovingBee } from "./objects/MyMovingBee.js";
 
 /**
  * MyScene
@@ -40,11 +38,9 @@ export class MyScene extends CGFscene {
     this.rock = new MyRock(this, 10, 10);
     this.garden = new MyGarden(this, 3, 3);
     this.rock = new MyRock(this, 10, 10, 1);
-    this.leg = new MyLeg(this);
-    this.head = new MyHead(this);
-    this.bee = new MyBee(this);
     this.rockSet = new MyRockSet(this,20,10,10);
     this.panorama = new MyPanorama(this, "images/panorama.jpg");
+    this.movingBee = new MyMovingBee(this);
   
     //Objects connected to MyInterface
     this.displayAxis = true;
@@ -138,8 +134,7 @@ export class MyScene extends CGFscene {
     this.popMatrix();
 
     this.pushMatrix();
-    this.sphereMaterial.apply();
-    this.bee.display();
+    this.movingBee.display();
     this.popMatrix();
      
     this.pushMatrix();
