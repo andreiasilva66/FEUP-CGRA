@@ -3,6 +3,9 @@ import { MyPlane } from "./objects/MyPlane.js";
 import { MyRock } from "./objects/MyRock.js";
 import { MySphere } from "./objects/MySphere.js";
 import { MyGarden } from "./objects/MyGarden.js";
+import { MyLeg } from "./objects/MyLeg.js";
+import { MyHead } from "./objects/MyHead.js";
+import { MyBee } from "./objects/MyBee.js";
 
 /**
  * MyScene
@@ -32,6 +35,9 @@ export class MyScene extends CGFscene {
     this.sphere = new MySphere(this, 20, 20);
     this.garden = new MyGarden(this, 3, 3);
     this.rock = new MyRock(this, 10, 10, 1);
+    this.leg = new MyLeg(this);
+    this.head = new MyHead(this);
+    this.bee = new MyBee(this);
 
     //Objects connected to MyInterface
     this.displayAxis = true;
@@ -92,28 +98,32 @@ export class MyScene extends CGFscene {
     this.applyViewMatrix();
 
     // Draw axis
+    this.setDefaultAppearance();
     if (this.displayAxis) this.axis.display();
 
     // ---- BEGIN Primitive drawing section
 
-    this.pushMatrix();
-    this.appearance.apply();
-    this.translate(0, -500, 0);
-    this.scale(400, 400, 400);
-    this.rotate(-Math.PI / 2.0, 1, 0, 0);
-    this.plane.display();
-    this.popMatrix();
+    // this.pushMatrix();
+     this.appearance.apply();
+    // this.translate(0, -500, 0);
+    // this.scale(400, 400, 400);
+    // this.rotate(-Math.PI / 2.0, 1, 0, 0);
+    //this.plane.display();
+    // this.popMatrix();
 
-    this.setDefaultAppearance();
-    this.pushMatrix();
-    this.garden.display();
-    this.popMatrix();
+    // this.setDefaultAppearance();
+    // this.pushMatrix();
+    //this.garden.display();
+    //this.leg.display();
+    this.bee.display();
+    //this.head.display();
+    // this.popMatrix();
 
-    this.pushMatrix();
-    this.scale(.2, .1, .2);
-    this.rockMaterial.apply();
+    // this.pushMatrix();
+    // this.scale(.2, .1, .2);
+    // this.rockMaterial.apply();
     //this.rock.display();
-    this.popMatrix();
+    // this.popMatrix();
     // ---- END Primitive drawing section
   }
 }

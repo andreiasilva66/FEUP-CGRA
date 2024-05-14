@@ -50,9 +50,9 @@ export class MySphere extends CGFobject {
         this.initGLBuffers();
     }
 
-    updateBuffers(complexity){
-        // reinitialize buffers
-        this.initBuffers();
-        this.initNormalVizBuffers();
-    }
+    // updateBuffers(complexity){
+    //     // reinitialize buffers
+    //     this.initBuffers();
+    //     this.initNormalVizBuffers();
+    // }
 }
