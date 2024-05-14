@@ -1,6 +1,8 @@
 import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFshader, CGFtexture } from "../lib/CGF.js";
+import { MyPanorama } from "./objects/MyPanorama.js";
 import { MyPlane } from "./objects/MyPlane.js";
 import { MyRock } from "./objects/MyRock.js";
+import { MyRockSet } from "./objects/MyRockSet.js";
 import { MySphere } from "./objects/MySphere.js";
 
 
@@ -25,12 +27,17 @@ export class MyScene extends CGFscene {
     this.gl.enable(this.gl.DEPTH_TEST);
     this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
+    
+    this.infPanorama = false;
 
     //Initialize scene objects
     this.axis = new CGFaxis(this);
     this.plane = new MyPlane(this, 30);
-    this.sphere = new MySphere(this, 20, 20);
-    this.rock = new MyRock(this, 10, 10, 1);
+    this.sphere = new MySphere(this, 20, 20, 20);
+    this.rock = new MyRock(this, 10, 10);
+    this.rockSet = new MyRockSet(this,20,10,10);
+    this.panorama = new MyPanorama(this, "images/panorama.jpg");
+    
 
     //Objects connected to MyInterface
     this.displayAxis = true;
@@ -50,6 +57,14 @@ export class MyScene extends CGFscene {
     this.rockMaterial = new CGFappearance(this);
     this.rockMaterial.loadTexture("images/rock_texture.png");
     this.rockMaterial.setTextureWrap('REPEAT', 'REPEAT');
+
+    this.panoramaMaterial = new CGFappearance(this);
+    this.panoramaMaterial.loadTexture("images/panorama.jpg");
+    this.panoramaMaterial.setTextureWrap('REPEAT', 'REPEAT');
+
+    this.rockSetMaterial = new CGFappearance(this);
+    this.rockSetMaterial.loadTexture("images/rock_texture.png");
+    this.rockSetMaterial.setTextureWrap('REPEAT', 'REPEAT');
   }
 
   initLights() {
@@ -79,6 +94,7 @@ export class MyScene extends CGFscene {
     this.sphere.setTexture(this.textures[this.selectedTexture]);
   }
 
+
   display() {
     // ---- BEGIN Background, camera and axis setup
     // Clear image and depth buffer everytime we update the scene
@@ -103,16 +119,28 @@ export class MyScene extends CGFscene {
     this.plane.display();
     this.popMatrix();
 
+    this.pushMatrix();
+    this.panorama.display();
+    this.popMatrix();
+
+
     // this.pushMatrix();
     // this.sphereMaterial.apply();
     // this.sphere.display();
     // this.popMatrix();
-
-    this.pushMatrix();
+    
+    //this.pushMatrix(); 
+    //this.scale(.2, .1, .2);
+    //this.rockMaterial.apply();
+    //this.rock.display();
+    //this.popMatrix();
+     
+    /*this.pushMatrix();
     this.scale(.2, .1, .2);
-    this.rockMaterial.apply();
-    this.rock.display();
+    this.rockSetMaterial.apply();
+    this.rockSet.display();
     this.popMatrix();
+*/
     // ---- END Primitive drawing section
   }
 }

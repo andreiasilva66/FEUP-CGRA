@@ -1,10 +1,11 @@
 import { CGFobject } from '../../lib/CGF.js';
 
 export class MyRock extends CGFobject {
-    constructor(scene, slices, stacks) {
+    constructor(scene, slices, stacks, coords=[]) {
         super(scene);
         this.slices = slices;
         this.stacks = stacks;
+        this.coords = coords;
         this.initBuffers();
     }
 
@@ -54,6 +55,14 @@ export class MyRock extends CGFobject {
 
         this.primitiveType = this.scene.gl.TRIANGLES;
         this.initGLBuffers();
+    }
+
+    scale(x, y, z) {
+        this.scene.scale(x, y, z);
+    }
+
+    translate(x, y, z) {
+        this.scene.translate(x, y, z);
     }
 
     updateBuffers(complexity){
