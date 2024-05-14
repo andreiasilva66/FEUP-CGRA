@@ -30,7 +30,7 @@ export class MyBee extends CGFobject {
         this.abdomenMaterial.setSpecular(0.1, 0.1, 0.1, 1);
         this.abdomenMaterial.setShininess(10.0);
         this.abdomenMaterial.loadTexture('images/abdomenText.webp');
-        this.abdomenMaterial.setTextureWrap('CLAMP_TO_EDGE', 'CLAMP_TO_EDGE');
+        this.abdomenMaterial.setTextureWrap('REPEAT', 'REPEAT');
 
         // Leg Material
         this.legMaterial = new CGFappearance(this.scene);
@@ -41,10 +41,13 @@ export class MyBee extends CGFobject {
 
         // Wing Material (Transparent)
         this.wingMaterial = new CGFappearance(this.scene);
-        this.wingMaterial.setAmbient(0.5, 0.5, 0.5, 0.5); // Adjust the color and alpha as needed
-        this.wingMaterial.setDiffuse(0.5, 0.5, 0.5, 0.5); // Adjust the color and alpha as needed
+        this.wingMaterial.setAmbient(0.1, 0.1, 0.1, 0.1); // Adjust the color and alpha as needed
+        this.wingMaterial.setDiffuse(0.1, 0.1, 0.1, 0.1); // Adjust the color and alpha as needed
         this.wingMaterial.setSpecular(0.1, 0.1, 0.1, 0.5);
-        this.wingMaterial.setShininess(10.0);
+        this.wingMaterial.setShininess(0.0);
+        this.wingMaterial.setEmission(0.1, 0.1, 0.1, 0.1);
+        this.wingMaterial.loadTexture('images/wingText.webp');
+        this.wingMaterial.setTextureWrap('REPEAT', 'REPEAT');
 
         // Enable alpha blending
         this.scene.gl.enable(this.scene.gl.BLEND);
@@ -100,11 +103,12 @@ export class MyBee extends CGFobject {
             this.scene.popMatrix();
         }
 
-        // Fisrt Right Wing
+        // First Right Wing
         this.scene.pushMatrix();
         this.scene.translate(0.5, 0.7, -0.8);
         //this.scene.rotate(-Math.PI/2, 1, 0, 0);
         this.scene.scale(0.4, 0.01, 0.2);
+        this.wingMaterial.apply();
         this.sphere.display();
         this.scene.popMatrix();
 
@@ -113,6 +117,7 @@ export class MyBee extends CGFobject {
         this.scene.translate(0.4, 0.7, -1.05);
         //this.scene.rotate(-Math.PI/2, 1, 0, 0);
         this.scene.scale(0.25, 0.01, 0.1);
+        this.wingMaterial.apply();
         this.sphere.display();
         this.scene.popMatrix();
 
@@ -121,6 +126,7 @@ export class MyBee extends CGFobject {
         this.scene.translate(-0.5, 0.7, -0.8);
         //this.scene.rotate(-Math.PI/2, 1, 0, 0);
         this.scene.scale(0.4, 0.01, 0.2);
+        this.wingMaterial.apply();
         this.sphere.display();
         this.scene.popMatrix();
 
@@ -129,6 +135,7 @@ export class MyBee extends CGFobject {
         this.scene.translate(-0.4, 0.7, -1.05);
         //this.scene.rotate(-Math.PI/2, 1, 0, 0);
         this.scene.scale(0.25, 0.01, 0.1);
+        this.wingMaterial.apply();
         this.sphere.display();
         this.scene.popMatrix();
     }

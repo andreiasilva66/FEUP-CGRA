@@ -57,7 +57,7 @@ export class MyFlower extends CGFobject {
         this.petalMaterial.setTextureWrap('CLAMP_TO_EDGE', 'CLAMP_TO_EDGE');
     
         // Initialize heart material
-        this.heartTexture = new CGFtexture(this.scene, 'images/receptacle2.jpg');
+        this.heartTexture = new CGFtexture(this.scene, 'images/receptacle3.jpg');
         this.heartMaterial = new CGFappearance(this.scene);
         this.heartMaterial.setAmbient(this.heartColor[0], this.heartColor[1], this.heartColor[2], this.heartColor[3]);
         this.heartMaterial.setDiffuse(this.heartColor[0], this.heartColor[1], this.heartColor[2], this.heartColor[3]);

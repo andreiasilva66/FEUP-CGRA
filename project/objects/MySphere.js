@@ -1,10 +1,12 @@
 import { CGFobject } from '../../lib/CGF.js';
 
 export class MySphere extends CGFobject {
-    constructor(scene, slices, stacks) {
+    constructor(scene, slices, stacks, radius=1, inside=false) {
         super(scene);
+        this.radius = radius;
         this.slices = slices;
         this.stacks = stacks;
+        this.inside = inside ? -1 : 1;
         this.initBuffers();
     }
 
@@ -27,11 +29,11 @@ export class MySphere extends CGFobject {
                 const x = cosPhi * sinTheta;
                 const y = cosTheta;
                 const z = sinPhi * sinTheta;
-                const u = 1 - (slice / this.slices);
-                const v =  stack / this.stacks;
+                const u = this.inside === -1 ? slice / this.slices : 1 - (slice / this.slices);
+                const v = stack / this.stacks;
 
-                this.vertices.push(x, y, z);
-                this.normals.push(x, y, z);
+                this.vertices.push(this.radius * x, this.radius * y, this.radius * z);
+                this.normals.push(x * this.inside, y * this.inside, z * this.inside);
                 this.texCoords.push(u, v);
             }
         }
@@ -41,8 +43,14 @@ export class MySphere extends CGFobject {
                 const first = (stack * (this.slices + 1)) + slice;
                 const second = first + this.slices + 1;
 
-                this.indices.push(first, first + 1, second);
-                this.indices.push(second, first + 1, second + 1);
+                if (this.inside === -1) {
+                    // Reverse the order of indices for inside-out rendering
+                    this.indices.push(first, second, first + 1);
+                    this.indices.push(second, second + 1, first + 1);
+                } else {
+                    this.indices.push(first, first + 1, second);
+                    this.indices.push(second, first + 1, second + 1);
+                }
             }
         }
 
@@ -50,9 +58,9 @@ export class MySphere extends CGFobject {
         this.initGLBuffers();
     }
 
-    // updateBuffers(complexity){
-    //     // reinitialize buffers
-    //     this.initBuffers();
-    //     this.initNormalVizBuffers();
-    // }
+    updateBuffers(complexity) {
+        // reinitialize buffers
+        this.initBuffers();
+        this.initNormalVizBuffers();
+    }
 }

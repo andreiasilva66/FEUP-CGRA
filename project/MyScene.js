@@ -1,6 +1,8 @@
 import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFshader, CGFtexture } from "../lib/CGF.js";
+import { MyPanorama } from "./objects/MyPanorama.js";
 import { MyPlane } from "./objects/MyPlane.js";
 import { MyRock } from "./objects/MyRock.js";
+import { MyRockSet } from "./objects/MyRockSet.js";
 import { MySphere } from "./objects/MySphere.js";
 import { MyGarden } from "./objects/MyGarden.js";
 import { MyLeg } from "./objects/MyLeg.js";
@@ -28,17 +30,22 @@ export class MyScene extends CGFscene {
     this.gl.enable(this.gl.DEPTH_TEST);
     this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
+    
+    this.infPanorama = false;
 
     //Initialize scene objects
     this.axis = new CGFaxis(this);
     this.plane = new MyPlane(this, 30);
-    this.sphere = new MySphere(this, 20, 20);
+    this.sphere = new MySphere(this, 20, 20, 20);
+    this.rock = new MyRock(this, 10, 10);
     this.garden = new MyGarden(this, 3, 3);
     this.rock = new MyRock(this, 10, 10, 1);
     this.leg = new MyLeg(this);
     this.head = new MyHead(this);
     this.bee = new MyBee(this);
-
+    this.rockSet = new MyRockSet(this,20,10,10);
+    this.panorama = new MyPanorama(this, "images/panorama.jpg");
+  
     //Objects connected to MyInterface
     this.displayAxis = true;
     this.scaleFactor = 1;
@@ -57,6 +64,14 @@ export class MyScene extends CGFscene {
     this.rockMaterial = new CGFappearance(this);
     this.rockMaterial.loadTexture("images/rock_texture.png");
     this.rockMaterial.setTextureWrap('REPEAT', 'REPEAT');
+
+    this.panoramaMaterial = new CGFappearance(this);
+    this.panoramaMaterial.loadTexture("images/panorama.jpg");
+    this.panoramaMaterial.setTextureWrap('REPEAT', 'REPEAT');
+
+    this.rockSetMaterial = new CGFappearance(this);
+    this.rockSetMaterial.loadTexture("images/rock_texture.png");
+    this.rockSetMaterial.setTextureWrap('REPEAT', 'REPEAT');
   }
 
   initLights() {
@@ -86,6 +101,7 @@ export class MyScene extends CGFscene {
     this.sphere.setTexture(this.textures[this.selectedTexture]);
   }
 
+
   display() {
     // ---- BEGIN Background, camera and axis setup
     // Clear image and depth buffer everytime we update the scene
@@ -103,27 +119,35 @@ export class MyScene extends CGFscene {
 
     // ---- BEGIN Primitive drawing section
 
-    // this.pushMatrix();
-     this.appearance.apply();
-    // this.translate(0, -500, 0);
-    // this.scale(400, 400, 400);
-    // this.rotate(-Math.PI / 2.0, 1, 0, 0);
-    //this.plane.display();
-    // this.popMatrix();
+    this.pushMatrix();
+    this.appearance.apply();
+    this.translate(0, -500, 0);
+    this.scale(400, 400, 400);
+    this.rotate(-Math.PI / 2.0, 1, 0, 0);
+    this.plane.display();
+    this.popMatrix();
 
-    // this.setDefaultAppearance();
-    // this.pushMatrix();
+
+    this.pushMatrix();
+    this.panorama.display();
+    this.popMatrix();
+
+    this.setDefaultAppearance();
+    this.pushMatrix();
     //this.garden.display();
-    //this.leg.display();
-    this.bee.display();
-    //this.head.display();
-    // this.popMatrix();
+    this.popMatrix();
 
-    // this.pushMatrix();
-    // this.scale(.2, .1, .2);
-    // this.rockMaterial.apply();
-    //this.rock.display();
-    // this.popMatrix();
+    this.pushMatrix();
+    this.sphereMaterial.apply();
+    this.bee.display();
+    this.popMatrix();
+     
+    this.pushMatrix();
+    this.scale(.2, .1, .2);
+    this.rockSetMaterial.apply();
+    //this.rockSet.display();
+    this.popMatrix();
+  
     // ---- END Primitive drawing section
   }
 }
