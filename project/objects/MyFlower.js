@@ -5,7 +5,7 @@ import { MyReceptacle } from "./MyReceptacle.js";
 import { MyLeaf } from "./MyLeaf.js";
 
 export class MyFlower extends CGFobject {
-    constructor(scene, extRadius, nPetals, petalColor, heartRadius, heartColor, stemRadius, stemSize, stemColor, leavesColor, minUnAngle, maxUnAngle) {
+    constructor(scene, extRadius, nPetals, petalColor, heartRadius, heartColor, stemRadius, stemSize, stemColor, leavesColor, minUnAngle, maxUnAngle, pos) {
         super(scene);
         this.extRadius = extRadius;
         this.nPetals = nPetals;
@@ -18,6 +18,10 @@ export class MyFlower extends CGFobject {
         this.leavesColor = leavesColor;
         this.minUnAngle = minUnAngle;
         this.maxUnAngle = maxUnAngle;
+        this.pos = pos;
+
+        this.hight = 0;
+        this.hasPollen = true;
 
         this.initObjects();
         this.initMaterials();
@@ -90,6 +94,8 @@ export class MyFlower extends CGFobject {
         for(let i=0; i<this.stemSize; i++){
             stemTotalLength += this.stemLength[i];
         }
+
+        this.pos[1] = stemTotalLength + this.heartRadius*2;
 
         // Display the stem
         let stemHeight = 0;

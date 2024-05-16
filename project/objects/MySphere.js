@@ -1,11 +1,13 @@
-import { CGFobject } from '../../lib/CGF.js';
+import { CGFobject, CGFappearance } from "../../lib/CGF.js";
 
 export class MySphere extends CGFobject {
-    constructor(scene, slices, stacks, radius=1, inside=false) {
+    constructor(scene, slices, stacks, radius = 1, inside = false, scaleYTop = 1, scaleYBottom = 1) {
         super(scene);
         this.radius = radius;
         this.slices = slices;
         this.stacks = stacks;
+        this.scaleYTop = scaleYTop;
+        this.scaleYBottom = scaleYBottom;
         this.inside = inside ? -1 : 1;
         this.initBuffers();
     }
@@ -27,8 +29,16 @@ export class MySphere extends CGFobject {
                 const cosPhi = Math.cos(phi);
 
                 const x = cosPhi * sinTheta;
-                const y = cosTheta;
+                let y, scaleY;
+                if (stack <= this.stacks / 2) {
+                    y = cosTheta * this.scaleYTop;
+                    scaleY = this.scaleYTop;
+                } else {
+                    y = cosTheta * this.scaleYBottom;
+                    scaleY = this.scaleYBottom;
+                }
                 const z = sinPhi * sinTheta;
+
                 const u = this.inside === -1 ? slice / this.slices : 1 - (slice / this.slices);
                 const v = stack / this.stacks;
 

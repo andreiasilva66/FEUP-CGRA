@@ -19,9 +19,9 @@ export class MyRockSet extends CGFobject {
 
     initRocks() {
         for (let i = 0; i < this.numStones; i++) {
-            var dx = this.getRndInteger(-this.numStones/10, this.numStones/10);
-            var dy = this.getRndInteger(-this.numStones/50, this.numStones/10); // Ensure dy is zero or negative
-            var dz = this.getRndInteger(-this.numStones/10, this.numStones/10);
+            var dx = this.getRndInteger(-this.numStones/4, this.numStones/3);
+            var dy = this.getRndInteger(-this.numStones/25, this.numStones/5); // Ensure dy is zero or negative
+            var dz = this.getRndInteger(-this.numStones/4, this.numStones/3);
             var rock = new MyRock(this.scene, this.maxSlices, this.maxStacks, [dx, dy, dz]);
             this.rocks.push(rock);
         }
@@ -37,6 +37,7 @@ export class MyRockSet extends CGFobject {
         for (let i = 0; i < this.rocks.length; i++) {
             this.scene.pushMatrix();
             this.scene.translate(this.rocks[i].coords[0], this.rocks[i].coords[1], this.rocks[i].coords[2]);
+            this.scene.scale(3, 3 ,3);
             this.rocks[i].display();
             this.scene.popMatrix();
         }

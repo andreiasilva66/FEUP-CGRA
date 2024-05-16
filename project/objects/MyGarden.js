@@ -1,5 +1,6 @@
 import {CGFobject, CGFappearance} from '../../lib/CGF.js';
 import { MyFlower } from './MyFlower.js';
+import { MyPollen } from './MyPollen.js';
 
 export class MyGarden extends CGFobject {
     constructor(scene, rows, cols) {
@@ -7,10 +8,11 @@ export class MyGarden extends CGFobject {
         this.rows = rows;
         this.cols = cols;
         this.flowers = [];
-        this.initFlowers();
+        this.pollen = [];
+        this.initObjects();
     }
 
-    initFlowers(){
+    initObjects(){
         for(let i = 0; i < this.rows; i++){
             for(let j = 0; j < this.cols; j++){
                 let extRadius = Math.random() * 4 + 3;
@@ -24,7 +26,10 @@ export class MyGarden extends CGFobject {
                 let leavesColor = [Math.random(), Math.random(), Math.random(), 1];
                 let minUnAngle = Math.random() * Math.PI/6;
                 let maxUnAngle = Math.random() * Math.PI/6 + Math.PI/6;
-                this.flowers.push(new MyFlower(this.scene, extRadius, nPetals, petalColor, heartRadius, heartColor, stemRadius, stemSize, stemColor, leavesColor, minUnAngle, maxUnAngle));
+                let pos = [i*10+5, 0, j*10+5];
+                this.flowers.push(new MyFlower(this.scene, extRadius, nPetals, petalColor, heartRadius, heartColor, stemRadius, stemSize, stemColor, leavesColor, minUnAngle, maxUnAngle, pos));
+            
+                this.pollen.push(new MyPollen(this.scene));
             }
         }
     }
@@ -33,9 +38,16 @@ export class MyGarden extends CGFobject {
         for(let i = 0; i < this.rows; i++){
             for(let j = 0; j < this.cols; j++){
                 this.scene.pushMatrix();
-                this.scene.translate(i*10, 0, j*10);
+                this.scene.translate(i*10+5, 0, j*10+5);
                 this.flowers[i * this.cols + j].display();
                 this.scene.popMatrix();
+
+                if(this.flowers[i * this.cols + j].hasPollen){
+                    this.scene.pushMatrix();
+                    this.scene.translate(i*10+5, this.flowers[i * this.cols + j].pos[1]+0.2, j*10+5);
+                    this.pollen[i * this.cols + j].display();
+                    this.scene.popMatrix();
+                }
             }
         }
     }

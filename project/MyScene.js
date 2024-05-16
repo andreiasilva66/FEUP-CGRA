@@ -6,6 +6,9 @@ import { MyRockSet } from "./objects/MyRockSet.js";
 import { MySphere } from "./objects/MySphere.js";
 import { MyGarden } from "./objects/MyGarden.js";
 import { MyMovingBee } from "./objects/MyMovingBee.js";
+import { MyPollen } from "./objects/MyPollen.js";
+import { MyHive } from "./objects/MyHive.js";
+import { MyBee } from "./objects/MyBee.js";
 
 /**
  * MyScene
@@ -29,7 +32,7 @@ export class MyScene extends CGFscene {
     this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
     
-    this.infPanorama = false;
+    this.infPanorama = true;
 
     //Initialize scene objects
     this.axis = new CGFaxis(this);
@@ -41,11 +44,16 @@ export class MyScene extends CGFscene {
     this.rockSet = new MyRockSet(this,20,10,10);
     this.panorama = new MyPanorama(this, "images/panorama.jpg");
     this.movingBee = new MyMovingBee(this);
+    this.pollen = new MyPollen(this);
+    this.hive = new MyHive(this);
+    this.bee = new MyBee(this);
+
+    this.hivePos = [-5, 1.5, 0];
   
     //Objects connected to MyInterface
     this.displayAxis = true;
     this.scaleFactor = 1;
-    this.speedFactor = 0.1;
+    this.speedFactor = 1;
 
     this.enableTextures(true);
 
@@ -119,7 +127,7 @@ export class MyScene extends CGFscene {
 
     this.pushMatrix();
     this.appearance.apply();
-    this.translate(0, -500, 0);
+    this.translate(0, 0, 0);
     this.scale(400, 400, 400);
     this.rotate(-Math.PI / 2.0, 1, 0, 0);
     this.plane.display();
@@ -132,18 +140,25 @@ export class MyScene extends CGFscene {
 
     this.setDefaultAppearance();
     this.pushMatrix();
-    //this.garden.display();
+    this.translate(this.hivePos[0]-0.7, this.hivePos[1]-0.5, this.hivePos[2]);
+    this.hive.display();
     this.popMatrix();
 
     this.pushMatrix();
     this.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
+    //this.bee.display();
     this.movingBee.display();
+    this.popMatrix();
+
+    this.pushMatrix();
+    this.garden.display();
     this.popMatrix();
      
     this.pushMatrix();
+    this.translate(this.hivePos[0], this.hivePos[1]-1, this.hivePos[2]);
     this.scale(.2, .1, .2);
     this.rockSetMaterial.apply();
-    //this.rockSet.display();
+    this.rockSet.display();
     this.popMatrix();
 
     this.checkKeys();
@@ -158,13 +173,13 @@ export class MyScene extends CGFscene {
     // Check for key codes e.g. in https://keycode.info/
     if (this.gui.isKeyPressed("KeyW")) {
       text+=" W ";
-      this.movingBee.accelerate(0.05* this.speedFactor);
+      this.movingBee.accelerate(0.02* this.speedFactor);
       keysPressed=true;
     }
 
     if (this.gui.isKeyPressed("KeyS"))        {
       text+=" S ";
-      this.movingBee.accelerate(-0.05 * this.speedFactor);
+      this.movingBee.accelerate(-0.02 * this.speedFactor);
       keysPressed=true;
     }
 
@@ -186,6 +201,24 @@ export class MyScene extends CGFscene {
       this.movingBee.goingUp = true;
       this.movingBee.orientation = 0;
       this.movingBee.velocity = 0;
+      keysPressed=true;
+    }
+
+    if(this.gui.isKeyPressed("KeyF")){
+      text+=" F ";
+      this.movingBee.goDown();
+      keysPressed=true;
+    }
+
+    if(this.gui.isKeyPressed("KeyP")){
+      text+=" P ";
+      this.movingBee.goUp();
+      keysPressed=true;
+    }
+
+    if(this.gui.isKeyPressed("KeyO")){
+      text+=" O ";
+      this.movingBee.goHive();
       keysPressed=true;
     }
 

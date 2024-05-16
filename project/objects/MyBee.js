@@ -3,14 +3,17 @@ import { MySphere } from "./MySphere.js";
 import { MyHead } from "./MyHead.js";
 import { MyLeg } from "./MyLeg.js"
 import { MyWing } from "./MyWing.js";
+import { MyPollen } from "./MyPollen.js";
 
 export class MyBee extends CGFobject {
     constructor(scene) {
         super(scene);
+        this.hasPollen = false;
         this.sphere = new MySphere(this.scene, 20, 20);
         this.head = new MyHead(this.scene);
         this.leg = new MyLeg(this.scene);
         this.wing = new MyWing(this.scene);
+        this.pollen = new MyPollen(this.scene);
         this.initMaterials();
     }
 
@@ -119,6 +122,13 @@ export class MyBee extends CGFobject {
         this.scene.scale(0.8, 0.8, 0.8);
         this.wing.display();
         this.scene.popMatrix();
+
+        if(this.hasPollen){
+            this.scene.pushMatrix();
+            this.scene.translate(0, -0.5, -0.8);
+            this.pollen.display();
+            this.scene.popMatrix();
+        }
     }
 
 }
