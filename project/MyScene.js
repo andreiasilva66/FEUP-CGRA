@@ -157,7 +157,7 @@ export class MyScene extends CGFscene {
     this.translate(this.hivePos[0], this.hivePos[1]-1, this.hivePos[2]);
     this.scale(.2, .1, .2);
     this.rockSetMaterial.apply();
-    //this.rockSet.display();
+    this.rockSet.display();
     this.popMatrix();
 
     this.checkKeys();
