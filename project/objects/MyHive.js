@@ -6,7 +6,7 @@ export class MyHive extends CGFobject {
     constructor(scene) {
         super(scene);
         this.sphere = new MySphere(this.scene, 20, 20, 1);
-        this.pollens = [new MyPollen(this.scene)];
+        this.pollens = [];
         this.initMaterials();
     }
 

@@ -130,7 +130,7 @@ export class MyScene extends CGFscene {
     this.translate(0, 0, 0);
     this.scale(400, 400, 400);
     this.rotate(-Math.PI / 2.0, 1, 0, 0);
-    this.plane.display();
+    //this.plane.display();
     this.popMatrix();
 
 
@@ -141,24 +141,23 @@ export class MyScene extends CGFscene {
     this.setDefaultAppearance();
     this.pushMatrix();
     this.translate(this.hivePos[0]-0.7, this.hivePos[1]-0.5, this.hivePos[2]);
-    this.hive.display();
+    //this.hive.display();
     this.popMatrix();
 
     this.pushMatrix();
     this.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
-    //this.bee.display();
-    this.movingBee.display();
+    //this.movingBee.display();
     this.popMatrix();
 
     this.pushMatrix();
-    this.garden.display();
+    //this.garden.display();
     this.popMatrix();
      
     this.pushMatrix();
     this.translate(this.hivePos[0], this.hivePos[1]-1, this.hivePos[2]);
     this.scale(.2, .1, .2);
     this.rockSetMaterial.apply();
-    this.rockSet.display();
+    //this.rockSet.display();
     this.popMatrix();
 
     this.checkKeys();

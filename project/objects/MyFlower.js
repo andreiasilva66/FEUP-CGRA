@@ -34,7 +34,7 @@ export class MyFlower extends CGFobject {
         this.receptacle = new MyReceptacle(this.scene);
         this.unionAngles = Array.from({ length: this.nPetals }, () => Math.random() * (this.maxUnAngle - this.minUnAngle) + this.minUnAngle);
         this.stemIncl = Array.from({ length: this.stemSize }, () => Math.random() * Math.PI/9 - Math.PI/18);
-        this.stemLength = Array.from({ length: this.stemSize }, () => Math.random() * 1.5 + 1.5 );
+        this.stemLength = Array.from({ length: this.stemSize }, () => Math.random() * 1.5 + 1.8 );
         this.leaf = new MyLeaf(this.scene, this.stemColor, this.leavesColor);
     }
 
@@ -61,7 +61,19 @@ export class MyFlower extends CGFobject {
         this.petalMaterial.setTextureWrap('CLAMP_TO_EDGE', 'CLAMP_TO_EDGE');
     
         // Initialize heart material
-        this.heartTexture = new CGFtexture(this.scene, 'images/receptacle3.jpg');
+        let heartText = Math.floor(Math.random() * 3);
+        switch(heartText){
+            case 0:
+                this.heartTexture = new CGFtexture(this.scene, 'images/receptacle.jpg');
+                break;
+            case 1:
+                this.heartTexture = new CGFtexture(this.scene, 'images/receptacle3.jpg');
+                break;
+            case 2:
+                this.heartTexture = new CGFtexture(this.scene, 'images/receptacle4.jpg');
+                break;
+        }
+
         this.heartMaterial = new CGFappearance(this.scene);
         this.heartMaterial.setAmbient(this.heartColor[0], this.heartColor[1], this.heartColor[2], this.heartColor[3]);
         this.heartMaterial.setDiffuse(this.heartColor[0], this.heartColor[1], this.heartColor[2], this.heartColor[3]);
@@ -71,7 +83,7 @@ export class MyFlower extends CGFobject {
         this.heartMaterial.setTextureWrap('REPEAT', 'REPEAT');
     
         // Initialize stem material
-        this.stemTexture = new CGFtexture(this.scene, 'images/receptacle.jpg');
+        this.stemTexture = new CGFtexture(this.scene, 'images/stemText.jpeg');
         this.stemMaterial = new CGFappearance(this.scene);
         this.stemMaterial.setAmbient(this.stemColor[0], this.stemColor[1], this.stemColor[2], this.stemColor[3]);
         this.stemMaterial.setDiffuse(this.stemColor[0], this.stemColor[1], this.stemColor[2], this.stemColor[3]);
