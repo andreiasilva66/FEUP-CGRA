@@ -21,7 +21,7 @@ export class MyFlower extends CGFobject {
         this.pos = pos;
 
         this.hight = 0;
-        this.hasPollen = true;
+        this.hasPollen = false;
 
         this.initObjects();
         this.initMaterials();
@@ -83,7 +83,15 @@ export class MyFlower extends CGFobject {
         this.heartMaterial.setTextureWrap('REPEAT', 'REPEAT');
     
         // Initialize stem material
-        this.stemTexture = new CGFtexture(this.scene, 'images/stemText.jpeg');
+        let stemText = Math.floor(Math.random() * 2);
+        switch(stemText){
+            case 0:
+                this.stemTexture = new CGFtexture(this.scene, 'images/stem.jpg');
+                break;
+            case 1:
+                this.stemTexture = new CGFtexture(this.scene, 'images/stemText.jpeg');
+                break;
+        }
         this.stemMaterial = new CGFappearance(this.scene);
         this.stemMaterial.setAmbient(this.stemColor[0], this.stemColor[1], this.stemColor[2], this.stemColor[3]);
         this.stemMaterial.setDiffuse(this.stemColor[0], this.stemColor[1], this.stemColor[2], this.stemColor[3]);
