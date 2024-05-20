@@ -44,7 +44,7 @@ export class MyScene extends CGFscene {
     //this.movingBee = new MyMovingBee(this);
     this.hive = new MyHive(this);
     this.bee = new MyBee(this);
-    this.grass = new MyGrass(this, 3000);
+    this.grass = new MyGrass(this, 300);
 
     this.hivePos = [-5, 1.5, 0];
   

@@ -223,11 +223,40 @@ export class MyBee extends CGFobject {
         }else if (Math.abs(this.pos[1] - this.scene.hivePos[1]) > tolerance) {
             this.pos[1] += this.pos[1] < this.scene.hivePos[1] ? 0.3 : -0.3;
         } else {
-            this.bee.hasPollen = false;
+            this.hasPollen = false;
             this.state = 0;
             this.scene.hive.pollens.push(new MyPollen(this.scene));
         }
     }
+
+    moveToFlower(){
+        for(let flower of this.scene.garden.flowers){
+            if(flower.hasPollen){
+                const tolerance = 0.2;
+
+                if (Math.abs(this.pos[2] - flower.pos[2]) > tolerance) {
+                    this.orientation = this.pos[2] < flower.pos[2] ? 0 : Math.PI;
+                } else if (Math.abs(this.pos[0] - flower.pos[0]) > tolerance) {
+                    this.orientation = this.pos[0] < flower.pos[0] ? Math.PI / 2 : -Math.PI / 2;
+                } 
+        
+                // Move the bee to the hive
+                if (Math.abs(this.pos[2] - flower.pos[2]) > tolerance) {
+                    this.pos[2] += this.pos[2] < flower.pos[2] ? 0.3 : -0.3;
+                }else  if (Math.abs(this.pos[0] - flower.pos[0]) > tolerance) {
+                    this.pos[0] += this.pos[0] < flower.pos[0] ? 0.3 : -0.3;
+                }else if (Math.abs(this.pos[1] - flower.pos[1]) > tolerance) {
+                    this.pos[1] += this.pos[1] < flower.pos[1] ? 0.3 : -0.3;
+                } else {
+                    this.hasPollen = true;
+                    this.state = 0;
+                    flower.hasPollen = false;
+                }
+                break;
+            }
+        }
+    }
+
 
     update(t){
         switch (this.states[this.state]) {
@@ -250,13 +279,7 @@ export class MyBee extends CGFobject {
                 }
                 break;
             case 'goingDown':
-                this.pos[1] -= 0.3;
-                if (this.touchFlower()) {
-                    this.state = 0;
-                }
-                if (this.pos[1] <= 0.5) {
-                    this.state = 0;
-                }
+                this.moveToFlower();
                 break;
             case 'goingHive':
                 this.moveToHive();
