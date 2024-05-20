@@ -141,12 +141,12 @@ export class MyScene extends CGFscene {
     this.setDefaultAppearance();
     this.pushMatrix();
     this.translate(this.hivePos[0]-0.7, this.hivePos[1]-0.5, this.hivePos[2]);
-    //this.hive.display();
+    this.hive.display();
     this.popMatrix();
 
     this.pushMatrix();
     this.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
-    //this.movingBee.display();
+    this.movingBee.display();
     this.popMatrix();
 
     this.pushMatrix();

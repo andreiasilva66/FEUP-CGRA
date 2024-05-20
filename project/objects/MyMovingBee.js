@@ -12,7 +12,7 @@ export class MyMovingBee extends CGFobject {
         this.state = 1;
         this.orientation = 0;
         this.velocity = 0;
-        
+        this.t = undefined;
     }
 
     display(){
@@ -35,13 +35,19 @@ export class MyMovingBee extends CGFobject {
             }
         }
         else if(this.states[this.state] == 'goingDown'){
-            this.pos[1] -= 0.05;
-            if(this.touchFlower()){
-                this.state = 0;
-            }
-            if(this.pos[1] <= 0.5){
-                this.state = 0;
-            }
+            var flower = this.getNearestFlower();
+            console.log("nearest flower coords: " + flower.pos[0] + " " + flower.pos[1] + " " + flower.pos[2]);
+            this.moveTo(flower.pos);
+            console.log("bee coords after move: " + this.pos[0] + " " + this.pos[1] + " " + this.pos[2]);
+            // console.log("going down");
+            // this.pos[1] -= 0.05;
+            // if(this.touchFlower()){
+            //     this.state = 0;
+            // }
+            // if(this.pos[1] <= 0.5){
+            //     this.state = 0;
+            // }
+            
         }
         else if(this.states[this.state] == 'goingHive'){
             this.moveToHive();
@@ -108,26 +114,145 @@ export class MyMovingBee extends CGFobject {
     }
 
     moveToHive(){
-    const tolerance = 0.1; // Define a tolerance value for position comparisons
+        const tolerance = 0.1; // Define a tolerance value for position comparisons
+        
+        if (Math.abs(this.pos[2] - this.scene.hivePos[2]) > tolerance) {
+            this.orientation = this.pos[2] < this.scene.hivePos[2] ? 0 : Math.PI;
+        } else if (Math.abs(this.pos[0] - this.scene.hivePos[0]) > tolerance) {
+            this.orientation = this.pos[0] < this.scene.hivePos[0] ? Math.PI / 2 : -Math.PI / 2;
+        } 
 
-    // Change the orientation to face the hive
-    if (Math.abs(this.pos[2] - this.scene.hivePos[2]) > tolerance) {
-        this.orientation = this.pos[2] < this.scene.hivePos[2] ? 0 : Math.PI;
-    } else if (Math.abs(this.pos[0] - this.scene.hivePos[0]) > tolerance) {
-        this.orientation = this.pos[0] < this.scene.hivePos[0] ? Math.PI / 2 : -Math.PI / 2;
-    } 
+        // Define the start and end positions
+        const startX = this.pos[0];
+        const startY = this.pos[1];
+        const startZ = this.pos[2];
+    
+        const endX = this.scene.hivePos[0];
+        const endY = this.scene.hivePos[1];
+        const endZ = this.scene.hivePos[2];
+    
+        // Calculate the horizontal distance and midpoint
+        const dx = endX - startX;
+        const dz = endZ - startZ;
+        const horizontalDistance = Math.sqrt(dx * dx + dz * dz);
+    
+        // Define the peak of the parabola (you can adjust the height factor)
+        const peakHeight = 5.0; // Maximum height of the parabola above the midpoint
+        const midpointX = (startX + endX) / 2;
+        const midpointY = Math.max(startY, endY) + peakHeight;
+        const midpointZ = (startZ + endZ) / 2;
+    
+        // Define the parameter t (0 <= t <= 1)
+        if (this.t === undefined) {
+            this.t = 0;
+        }
 
-    // Move the bee to the hive
-    if (Math.abs(this.pos[2] - this.scene.hivePos[2]) > tolerance) {
-        this.pos[2] += this.pos[2] < this.scene.hivePos[2] ? 0.05 : -0.05;
-    }else  if (Math.abs(this.pos[0] - this.scene.hivePos[0]) > tolerance) {
-        this.pos[0] += this.pos[0] < this.scene.hivePos[0] ? 0.05 : -0.05;
-    }else if (Math.abs(this.pos[1] - this.scene.hivePos[1]) > tolerance) {
-        this.pos[1] += this.pos[1] < this.scene.hivePos[1] ? 0.05 : -0.05;
-    } else {
-        this.bee.hasPollen = false;
+        this.t += 0.001;
+    
+        if (this.t > 1) {
+            this.t = 1; // Clamp t to 1 when it exceeds 1
+        }
+    
+        // Calculate the interpolated positions using a parabolic formula
+        const t = this.t;
+        const parabolicX = (1 - t) * (1 - t) * startX + 2 * (1 - t) * t * midpointX + t * t * endX;
+        const parabolicY = (1 - t) * (1 - t) * startY + 2 * (1 - t) * t * midpointY + t * t * endY;
+        const parabolicZ = (1 - t) * (1 - t) * startZ + 2 * (1 - t) * t * midpointZ + t * t * endZ;
+    
+        // Update the bee's position
+        this.pos[0] = parabolicX;
+        this.pos[1] = parabolicY;
+        this.pos[2] = parabolicZ;
+    
+        // Check if the bee has reached the hive
+        if (Math.abs(this.pos[0] - endX) < tolerance && Math.abs(this.pos[1] - endY) < tolerance && Math.abs(this.pos[2] - endZ) < tolerance) {
+            this.bee.hasPollen = false;
+            this.state = 0;
+            this.scene.hive.pollens.push(new MyPollen(this.scene));
+            this.t = undefined; // Reset t for the next movement
+        }
+    }    
+
+    getNearestFlower() {
+        var list = [1000000, flower];
+        for( var flower in this.scene.garden.flowers){
+            if(this.scene.garden.flowers[flower].hasPollen == true){
+                var currDist = Math.sqrt(this.scene.garden.flowers[flower].pos[1]**2 + this.scene.garden.flowers[flower].pos[0]**2 + this.scene.garden.flowers[flower].pos[2]**2);
+                if(currDist < list[0]){
+                    list[0] = currDist;
+                    list[1] = this.scene.garden.flowers[flower];
+                }
+            }
+        }
         this.state = 0;
-        this.scene.hive.pollens.push(new MyPollen(this.scene));
+        return list[1];
     }
+
+    moveTo(targetPos) {
+        const tolerance = 0.1; // Define a tolerance value for position comparisons
+        
+        if (Math.abs(this.pos[2] - targetPos[2]) > tolerance) {
+            this.orientation = this.pos[2] < targetPos[2] ? 0 : Math.PI;
+        } else if (Math.abs(this.pos[0] - targetPos[0]) > tolerance) {
+            this.orientation = this.pos[0] < targetPos[0] ? Math.PI / 2 : -Math.PI / 2;
+        } 
+
+        // Define the start and end positions
+        const startX = this.pos[0];
+        const startY = this.pos[1];
+        const startZ = this.pos[2];
+    
+        const endX = targetPos[0];
+        const endY = targetPos[1];
+        const endZ = targetPos[2];
+    
+        // Calculate the horizontal distance and midpoint
+        const dx = endX - startX;
+        const dz = endZ - startZ;
+        const horizontalDistance = Math.sqrt(dx * dx + dz * dz);
+    
+        // Define the peak of the parabola (you can adjust the height factor)
+        const midpointX = (startX + endX) / 2;
+        const midpointY = Math.max(startY, endY);
+        const midpointZ = (startZ + endZ) / 2;
+    
+        // Define the parameter t (0 <= t <= 1)
+        if (this.t === undefined) {
+            this.t = 0;
+        }
+
+        this.t += 0.001;
+    
+        if (this.t > 1) {
+            this.t = 1; // Clamp t to 1 when it exceeds 1
+        }
+    
+        // Calculate the interpolated positions using a parabolic formula
+        const t = this.t;
+        const parabolicX = (1 - t) * (1 - t) * startX + 2 * (1 - t) * t * midpointX + t * t * endX;
+        const parabolicY = (1 - t) * (1 - t) * startY + 2 * (1 - t) * t * midpointY + t * t * endY;
+        const parabolicZ = (1 - t) * (1 - t) * startZ + 2 * (1 - t) * t * midpointZ + t * t * endZ;
+        console.log("par" + parabolicX + " " + parabolicY + " " + parabolicZ);
+        // Update the bee's position
+        if(this.pos[1] <= 0.5){
+            console.log("TOUCHED THE GROUND");
+            this.state = 0;
+            this.pos[0] = parabolicX;
+            this.pos[1] = .5;
+            this.pos[2] = parabolicZ;
+            this.t = undefined
+            return;
+        }
+        
+        this.pos[0] = parabolicX;
+        this.pos[1] = parabolicY;
+        this.pos[2] = parabolicZ;
+
+        if(this.touchFlower()){
+            console.log("TOUCHED FLOWER"); 
+            this.state = 0;
+            this.t = undefined; // Reset t for the next movement
+            return;
+        }   
     }
 }
