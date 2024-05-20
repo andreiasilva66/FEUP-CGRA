@@ -21,7 +21,7 @@ export class MyFlower extends CGFobject {
         this.pos = pos;
 
         this.hight = 0;
-        this.hasPollen = false;
+        this.hasPollen = true;
 
         this.initObjects();
         this.initMaterials();

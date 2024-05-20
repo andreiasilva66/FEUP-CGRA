@@ -31,7 +31,7 @@ export class MyScene extends CGFscene {
     this.gl.depthFunc(this.gl.LEQUAL);
     
     this.infPanorama = true;
-    this.setUpdatePeriod(1000 / 60);
+    this.setUpdatePeriod(80);
 
     //Initialize scene objects
     this.axis = new CGFaxis(this);
@@ -177,25 +177,25 @@ export class MyScene extends CGFscene {
     // Check for key codes e.g. in https://keycode.info/
     if (this.gui.isKeyPressed("KeyW")) {
       text+=" W ";
-      this.movingBee.accelerate(0.02* this.speedFactor);
+      this.movingBee.accelerate(this.speedFactor/10);
       keysPressed=true;
     }
 
     if (this.gui.isKeyPressed("KeyS"))        {
       text+=" S ";
-      this.movingBee.accelerate(-0.02 * this.speedFactor);
+      this.movingBee.accelerate(-this.speedFactor/10);
       keysPressed=true;
     }
 
     if (this.gui.isKeyPressed("KeyA")) {
       text+=" A ";
-      this.movingBee.turn(0.1 * this.speedFactor);
+      this.movingBee.turn(this.speedFactor/10);
       keysPressed=true;
     }
 
     if (this.gui.isKeyPressed("KeyD")) {
       text+=" D ";
-      this.movingBee.turn(-0.1 * this.speedFactor);
+      this.movingBee.turn(-this.speedFactor/10);
       keysPressed=true;
     }
 
@@ -204,7 +204,8 @@ export class MyScene extends CGFscene {
       this.movingBee.pos = [0, 3, 0];
       this.movingBee.goingUp = true;
       this.movingBee.orientation = 0;
-      this.movingBee.velocity = 0;
+      this.movingBee.velocity[0] = 0;
+      this.movingBee.velocity[2] = 0;
       keysPressed=true;
     }
 
