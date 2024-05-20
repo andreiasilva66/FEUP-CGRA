@@ -15,50 +15,14 @@ export class MyMovingBee extends CGFobject {
         
     }
 
-    display(){
-        if(this.states[this.state] == 'flyingUp'){
-            this.pos[1] += 0.05;
-            if(this.pos[1] >= this.initY + 1){
-                this.state = 2;
-            }
-        }
-        else if(this.states[this.state] == 'flyingDown'){
-            this.pos[1] -= 0.05;
-            if(this.pos[1] <= this.initY - 1 ){
-                this.state = 1;
-            }
-        }
-        else if(this.states[this.state] == 'goingUp'){
-            this.pos[1] += 0.05;
-            if(this.pos[1] >= this.initY + 1){
-                this.state = 1;
-            }
-        }
-        else if(this.states[this.state] == 'goingDown'){
-            this.pos[1] -= 0.05;
-            if(this.touchFlower()){
-                this.state = 0;
-            }
-            if(this.pos[1] <= 0.5){
-                this.state = 0;
-            }
-        }
-        else if(this.states[this.state] == 'goingHive'){
-            this.moveToHive();
-        }
-
-        if(this.velocity != 0){
-            this.pos[0] += this.velocity * Math.sin(this.orientation);
-            this.pos[2] += this.velocity * Math.cos(this.orientation);
-        }
-
+    display() {
         this.scene.pushMatrix();
         this.scene.translate(this.pos[0], this.pos[1], this.pos[2]);
         this.scene.rotate(this.orientation, 0, 1, 0);
         this.bee.display();
         this.scene.popMatrix();
-    
     }
+    
 
     touchFlower(){
         for(let flower of this.scene.garden.flowers){
@@ -108,7 +72,7 @@ export class MyMovingBee extends CGFobject {
     }
 
     moveToHive(){
-    const tolerance = 0.1; // Define a tolerance value for position comparisons
+    const tolerance = 0.1; // Tolerance for the bee to reach the hive
 
     // Change the orientation to face the hive
     if (Math.abs(this.pos[2] - this.scene.hivePos[2]) > tolerance) {
@@ -129,5 +93,47 @@ export class MyMovingBee extends CGFobject {
         this.state = 0;
         this.scene.hive.pollens.push(new MyPollen(this.scene));
     }
+    }
+
+    update(t){
+        switch (this.states[this.state]) {
+            case 'flyingUp':
+                this.pos[1] += 0.05;
+                if (this.pos[1] >= this.initY + 1) {
+                    this.state = 2;
+                }
+                break;
+            case 'flyingDown':
+                this.pos[1] -= 0.05;
+                if (this.pos[1] <= this.initY - 1) {
+                    this.state = 1;
+                }
+                break;
+            case 'goingUp':
+                this.pos[1] += 0.05;
+                if (this.pos[1] >= this.initY + 1) {
+                    this.state = 1;
+                }
+                break;
+            case 'goingDown':
+                this.pos[1] -= 0.05;
+                if (this.touchFlower()) {
+                    this.state = 0;
+                }
+                if (this.pos[1] <= 0.5) {
+                    this.state = 0;
+                }
+                break;
+            case 'goingHive':
+                this.moveToHive();
+                break;
+            default:
+                break;
+        }
+    
+        if (this.velocity != 0) {
+            this.pos[0] += this.velocity * Math.sin(this.orientation);
+            this.pos[2] += this.velocity * Math.cos(this.orientation);
+        }
     }
 }

@@ -1,14 +1,12 @@
 import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFshader, CGFtexture } from "../lib/CGF.js";
 import { MyPanorama } from "./objects/MyPanorama.js";
 import { MyPlane } from "./objects/MyPlane.js";
-import { MyRock } from "./objects/MyRock.js";
 import { MyRockSet } from "./objects/MyRockSet.js";
 import { MySphere } from "./objects/MySphere.js";
 import { MyGarden } from "./objects/MyGarden.js";
 import { MyMovingBee } from "./objects/MyMovingBee.js";
-import { MyPollen } from "./objects/MyPollen.js";
 import { MyHive } from "./objects/MyHive.js";
-import { MyBee } from "./objects/MyBee.js";
+import { MyGrass } from "./objects/MyGrass.js";
 
 /**
  * MyScene
@@ -33,20 +31,19 @@ export class MyScene extends CGFscene {
     this.gl.depthFunc(this.gl.LEQUAL);
     
     this.infPanorama = true;
+    this.setUpdatePeriod(1000 / 60);
 
     //Initialize scene objects
     this.axis = new CGFaxis(this);
     this.plane = new MyPlane(this, 30);
     this.sphere = new MySphere(this, 20, 20, 20);
-    this.rock = new MyRock(this, 10, 10);
     this.garden = new MyGarden(this, 3, 3);
-    this.rock = new MyRock(this, 10, 10, 1);
     this.rockSet = new MyRockSet(this,20,10,10);
     this.panorama = new MyPanorama(this, "images/panorama.jpg");
     this.movingBee = new MyMovingBee(this);
-    this.pollen = new MyPollen(this);
     this.hive = new MyHive(this);
-    this.bee = new MyBee(this);
+    //this.bee = new MyBee(this);
+    this.grass = new MyGrass(this, 6000);
 
     this.hivePos = [-5, 1.5, 0];
   
@@ -66,9 +63,9 @@ export class MyScene extends CGFscene {
     this.sphereMaterial.loadTexture("images/earth.jpg");
     this.sphereMaterial.setTextureWrap('REPEAT', 'REPEAT');
 
-    this.rockMaterial = new CGFappearance(this);
-    this.rockMaterial.loadTexture("images/rock_texture.png");
-    this.rockMaterial.setTextureWrap('REPEAT', 'REPEAT');
+    // this.rockMaterial = new CGFappearance(this);
+    // this.rockMaterial.loadTexture("images/rock_texture.png");
+    // this.rockMaterial.setTextureWrap('REPEAT', 'REPEAT');
 
     this.panoramaMaterial = new CGFappearance(this);
     this.panoramaMaterial.loadTexture("images/panorama.jpg");
@@ -141,12 +138,12 @@ export class MyScene extends CGFscene {
     this.setDefaultAppearance();
     this.pushMatrix();
     this.translate(this.hivePos[0]-0.7, this.hivePos[1]-0.5, this.hivePos[2]);
-    //this.hive.display();
+    this.hive.display();
     this.popMatrix();
 
     this.pushMatrix();
     this.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
-    //this.movingBee.display();
+    this.movingBee.display();
     this.popMatrix();
 
     this.pushMatrix();
@@ -160,9 +157,17 @@ export class MyScene extends CGFscene {
     this.rockSet.display();
     this.popMatrix();
 
-    this.checkKeys();
-  
+    this.pushMatrix();
+    this.grass.display();
+    this.popMatrix();
+
     // ---- END Primitive drawing section
+  }
+
+  update(t) {
+    this.checkKeys();
+    this.movingBee.update(t);
+    this.grass.update(t);
   }
 
   checkKeys() {
