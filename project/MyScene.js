@@ -4,7 +4,8 @@ import { MyPlane } from "./objects/MyPlane.js";
 import { MyRockSet } from "./objects/MyRockSet.js";
 import { MySphere } from "./objects/MySphere.js";
 import { MyGarden } from "./objects/MyGarden.js";
-import { MyMovingBee } from "./objects/MyMovingBee.js";
+//import { MyMovingBee } from "./objects/MyMovingBee.js";
+import { MyBee } from "./objects/MyBee.js";
 import { MyHive } from "./objects/MyHive.js";
 import { MyGrass } from "./objects/MyGrass.js";
 
@@ -40,10 +41,10 @@ export class MyScene extends CGFscene {
     this.garden = new MyGarden(this, 3, 3);
     this.rockSet = new MyRockSet(this,20,10,10);
     this.panorama = new MyPanorama(this, "images/panorama.jpg");
-    this.movingBee = new MyMovingBee(this);
+    //this.movingBee = new MyMovingBee(this);
     this.hive = new MyHive(this);
-    //this.bee = new MyBee(this);
-    this.grass = new MyGrass(this, 6000);
+    this.bee = new MyBee(this);
+    this.grass = new MyGrass(this, 3000);
 
     this.hivePos = [-5, 1.5, 0];
   
@@ -143,7 +144,8 @@ export class MyScene extends CGFscene {
 
     this.pushMatrix();
     this.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
-    this.movingBee.display();
+    this.bee.display();
+    //this.movingBee.display();
     this.popMatrix();
 
     this.pushMatrix();
@@ -166,7 +168,7 @@ export class MyScene extends CGFscene {
 
   update(t) {
     this.checkKeys();
-    this.movingBee.update(t);
+    this.bee.update(t);
     this.grass.update(t);
   }
 
@@ -177,53 +179,53 @@ export class MyScene extends CGFscene {
     // Check for key codes e.g. in https://keycode.info/
     if (this.gui.isKeyPressed("KeyW")) {
       text+=" W ";
-      this.movingBee.accelerate(this.speedFactor/10);
+      this.bee.accelerate(this.speedFactor/10);
       keysPressed=true;
     }
 
     if (this.gui.isKeyPressed("KeyS"))        {
       text+=" S ";
-      this.movingBee.accelerate(-this.speedFactor/10);
+      this.bee.accelerate(-this.speedFactor/10);
       keysPressed=true;
     }
 
     if (this.gui.isKeyPressed("KeyA")) {
       text+=" A ";
-      this.movingBee.turn(this.speedFactor/10);
+      this.bee.turn(this.speedFactor/10);
       keysPressed=true;
     }
 
     if (this.gui.isKeyPressed("KeyD")) {
       text+=" D ";
-      this.movingBee.turn(-this.speedFactor/10);
+      this.bee.turn(-this.speedFactor/10);
       keysPressed=true;
     }
 
     if(this.gui.isKeyPressed("KeyR")){
       text+=" R ";
-      this.movingBee.pos = [0, 3, 0];
-      this.movingBee.goingUp = true;
-      this.movingBee.orientation = 0;
-      this.movingBee.velocity[0] = 0;
-      this.movingBee.velocity[2] = 0;
+      this.bee.pos = [0, 3, 0];
+      this.bee.goingUp = true;
+      this.bee.orientation = 0;
+      this.bee.velocity[0] = 0;
+      this.bee.velocity[2] = 0;
       keysPressed=true;
     }
 
     if(this.gui.isKeyPressed("KeyF")){
       text+=" F ";
-      this.movingBee.goDown();
+      this.bee.goDown();
       keysPressed=true;
     }
 
     if(this.gui.isKeyPressed("KeyP")){
       text+=" P ";
-      this.movingBee.goUp();
+      this.bee.goUp();
       keysPressed=true;
     }
 
     if(this.gui.isKeyPressed("KeyO")){
       text+=" O ";
-      this.movingBee.goHive();
+      this.bee.goHive();
       keysPressed=true;
     }
 
