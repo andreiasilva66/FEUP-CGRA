@@ -145,7 +145,6 @@ export class MyScene extends CGFscene {
     this.pushMatrix();
     this.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
     this.bee.display();
-    //this.movingBee.display();
     this.popMatrix();
 
     this.pushMatrix();

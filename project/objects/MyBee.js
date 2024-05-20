@@ -11,10 +11,12 @@ export class MyBee extends CGFobject {
         this.hasPollen = false;
         this.initY = 15;
         this.pos = [0, this.initY, 0];
-        this.states = ['idle', 'flyingUp', 'flyingDown', 'goingUp', 'goingDown', 'goingHive'];
+        this.states = ['idle', 'flyingUp', 'flyingDown', 'goingUp', 'goingFlower', 'goingHive'];
         this.state = 1;
         this.orientation = 0;
         this.velocity = [0, 0, 0];
+        this.objPos = [0, 0, 0];
+        this.yAcc = 0;
         this.initObjects();
         this.initMaterials();
     }
@@ -190,11 +192,12 @@ export class MyBee extends CGFobject {
     goDown(){
         if(this.states[this.state] != 'idle' && this.states[this.state] != 'goingUp'){
             this.state = 4;
+            this.turnToFlower();
         }
     }
 
     goUp(){
-        if(this.states[this.state] != 'goingDown'){
+        if(this.states[this.state] != 'goingFlower'){
             this.state = 3;
         }
     }
@@ -202,6 +205,7 @@ export class MyBee extends CGFobject {
     goHive(){
         if(this.hasPollen){
             this.state = 5;
+            this.turnToHive();
         }
     }
 
@@ -229,34 +233,91 @@ export class MyBee extends CGFobject {
         }
     }
 
-    moveToFlower(){
+    reachObject(){
+        let tolerance = 1;
+        if (Math.sqrt(Math.pow(this.pos[0] - this.objPos[0], 2) + Math.pow(this.pos[1] - this.objPos[1], 2) + Math.pow(this.pos[2] - this.objPos[2], 2)) < tolerance) {
+            return true;
+        }
+        return false;
+    }
+
+    reachHive(){
+        let tolerance = 1.5;
+        if (Math.sqrt(Math.pow(this.pos[0] - this.scene.hivePos[0], 2) + Math.pow(this.pos[1] - this.scene.hivePos[1], 2) + Math.pow(this.pos[2] - this.scene.hivePos[2], 2)) < tolerance) {
+            this.scene.hive.pollens.push(new MyPollen(this.scene));
+            return true;
+        }
+        return false;
+    }
+
+    turnToHive(){
+        if(this.velocity[0] == 0 && this.velocity[2] == 0){
+            this.velocity[0] = 0.3;
+        }
+
+        let posVec = [this.scene.hivePos[0] - this.pos[0], this.scene.hivePos[1] - this.pos[1], this.scene.hivePos[2] - this.pos[2]];
+        let posVecNorm = Math.sqrt(posVec[0] * posVec[0] + posVec[2] * posVec[2]);
+        let velVecNorm = Math.sqrt(this.velocity[0] * this.velocity[0] + this.velocity[2] * this.velocity[2]);
+        let angle = Math.acos((posVec[0] * this.velocity[0] + posVec[2] * this.velocity[2]) / (posVecNorm * velVecNorm));
+        let distance = Math.sqrt(Math.pow(posVec[0], 2) + Math.pow(posVec[2], 2));
+        let time = distance / velVecNorm;
+        this.yAcc = 2 * (this.scene.hivePos[1] - this.pos[1]) / (time * time);
+
+        if(angle > Math.PI/2){
+            this.turn(angle);
+        }else{
+            this.turn(angle);
+
+        }
+
+        console.log("posVec: " + posVec);
+        console.log("velVec: " + this.velocity);
+        console.log("posVecNorm: " + posVecNorm);
+        console.log("velVecNorm: " + velVecNorm);
+        console.log("angle: " + angle);
+    }
+        
+    
+
+    turnToFlower(){
+        if(this.velocity[0] == 0 && this.velocity[2] == 0){
+            this.velocity[0] = 0.3;
+        }
         for(let flower of this.scene.garden.flowers){
             if(flower.hasPollen){
-                const tolerance = 0.2;
+                console.log("Flower has pollen");
 
-                if (Math.abs(this.pos[2] - flower.pos[2]) > tolerance) {
-                    this.orientation = this.pos[2] < flower.pos[2] ? 0 : Math.PI;
-                } else if (Math.abs(this.pos[0] - flower.pos[0]) > tolerance) {
-                    this.orientation = this.pos[0] < flower.pos[0] ? Math.PI / 2 : -Math.PI / 2;
-                } 
+                let posVec = [flower.pos[0] - this.pos[0], flower.pos[1] - this.pos[1], flower.pos[2] - this.pos[2]];
+                let posVecNorm = Math.sqrt(posVec[0] * posVec[0] + posVec[2] * posVec[2]);
+                let velVecNorm = Math.sqrt(this.velocity[0] * this.velocity[0] + this.velocity[2] * this.velocity[2]);
+                let angle = Math.acos((posVec[0] * this.velocity[0] + posVec[2] * this.velocity[2]) / (posVecNorm * velVecNorm));
+                let distance = Math.sqrt(Math.pow(posVec[0], 2) + Math.pow(posVec[2], 2));
+                let time = distance / velVecNorm;
+                this.yAcc = 2 * (flower.pos[1] - this.pos[1]) / (time * time);
+                if(angle > Math.PI/2){
+                    this.turn(angle);
+                }else{
+                    this.turn(angle);
         
-                // Move the bee to the hive
-                if (Math.abs(this.pos[2] - flower.pos[2]) > tolerance) {
-                    this.pos[2] += this.pos[2] < flower.pos[2] ? 0.3 : -0.3;
-                }else  if (Math.abs(this.pos[0] - flower.pos[0]) > tolerance) {
-                    this.pos[0] += this.pos[0] < flower.pos[0] ? 0.3 : -0.3;
-                }else if (Math.abs(this.pos[1] - flower.pos[1]) > tolerance) {
-                    this.pos[1] += this.pos[1] < flower.pos[1] ? 0.3 : -0.3;
-                } else {
-                    this.hasPollen = true;
-                    this.state = 0;
-                    flower.hasPollen = false;
                 }
+
                 break;
             }
         }
     }
 
+    reachFlower(){
+        let tolerance = 1;
+        for(let flower of this.scene.garden.flowers){
+            if(flower.hasPollen){
+                if (Math.sqrt(Math.pow(this.pos[0] - flower.pos[0], 2) + Math.pow(this.pos[1] - flower.pos[1], 2) + Math.pow(this.pos[2] - flower.pos[2], 2)) < tolerance) {
+                    flower.hasPollen = false;
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     update(t){
         switch (this.states[this.state]) {
@@ -278,11 +339,22 @@ export class MyBee extends CGFobject {
                     this.state = 1;
                 }
                 break;
-            case 'goingDown':
-                this.moveToFlower();
+            case 'goingFlower':
+                this.velocity[1] += this.yAcc;
+                if(this.reachFlower()){
+                    this.state = 0;
+                    this.velocity = [0, 0, 0];
+                    this.hasPollen = true;
+                }
                 break;
             case 'goingHive':
-                this.moveToHive();
+                this.velocity[1] += this.yAcc;
+                console.log(this.velocity);
+                if(this.reachHive()){
+                    this.state = 0;
+                    this.velocity = [0, 0, 0];
+                    this.hasPollen = false;
+                }
                 break;
             default:
                 break;
@@ -290,6 +362,7 @@ export class MyBee extends CGFobject {
     
         if (this.velocity[0] != 0 || this.velocity[2] != 0) {
             this.pos[0] += this.velocity[0];
+            this.pos[1] += this.velocity[1];
             this.pos[2] += this.velocity[2];
         }
     }
